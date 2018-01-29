@@ -7,9 +7,8 @@ then
   exit 1
 fi
 
-cd maat
-
-if ! java -jar Maat.jar testdata/JSONlog-0-short.json;
+if ! java -Xmx1024m -jar Maat.jar JSONlog-0-short.json;
+then
   echo "Maat failed on JSONlog-0-short.json, please check corresponding logs"
   exit 1
 else

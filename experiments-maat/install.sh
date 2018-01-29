@@ -18,5 +18,6 @@ scp jobscript.sh "${REMOTE}"jobscript.sh
 cd ${OLD}
 
 scp runall.sh "${REMOTE}/../maat-runall.sh"
+scp pre-validate.sh "${REMOTE}pre-validate.sh"
 
 echo "Install complete, please SSH to ${REMOTE} and execute ./maat-runall.sh to execute experiments"
