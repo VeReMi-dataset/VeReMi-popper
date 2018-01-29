@@ -10,7 +10,7 @@ OLD="`pwd`"
 cd ${MAATDIR}
 gradle jar
 scp bin/libs/Maat-1.0.jar "${REMOTE}"Maat.jar
-scp testdata/test.json "${REMOTE}"test.json
+scp testdata/JSONlog-0-short.json "${REMOTE}"JSONlog-0-short.json
 scp detectors.xml "${REMOTE}"detectors.xml
 scp job.moab "${REMOTE}"job.moab
 scp jobscript.sh "${REMOTE}"jobscript.sh

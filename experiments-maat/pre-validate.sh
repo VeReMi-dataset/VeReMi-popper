@@ -7,8 +7,8 @@ then
   exit 1
 fi
 
-if ! java -jar maat/Maat.jar maat/test.json; 
-  echo "Maat failed on test.json, please check corresponding logs"
+if ! java -jar maat/Maat.jar maat/JSONlog-0-short.json;
+  echo "Maat failed on JSONlog-0-short.json, please check corresponding logs"
   exit 1
 fi
 
