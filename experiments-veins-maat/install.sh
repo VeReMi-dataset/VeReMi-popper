@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# This script installs veins-maat from the veins-maat.git bare repository and builds it
+# TODO make this portable
+
 # Dependencies:
 #  - SUMO 0.30.0 (tested, higher probably works)
 #  - OMNeT++ 5.1.1 (tested, higher might work)
@@ -21,4 +24,7 @@ if ./configure --include ~/rapidjson/include && \
     echo "successfully compiled veins with rapidjson"
 else
     echo "error occurred"
+    exit 1
 fi
+
+echo "Install complete, please run ./pre-validate.sh to verify the experimental setup before running the experiments with ./runall.sh"
