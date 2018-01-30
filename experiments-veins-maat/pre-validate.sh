@@ -13,13 +13,16 @@ if ! ${HOME}/sumo/sumo-0.30.0/bin/sumo --version;
 then
   echo 'SUMO failed'
   exit 1
-elif [ -n "`${HOME}/sumo/sumo-0.30.0/bin/sumo --version | grep 'TRACI PROJ GDAL'`" ];
+elif [ -z "`${HOME}/sumo/sumo-0.30.0/bin/sumo --version | grep 'TRACI PROJ GDAL'`" ];
+then
   echo 'Your SUMO version lacks one or more of: TRACI, PROJ, GDAL'
   exit 1
 fi
 
 # test VEINS
 cd veins-maat/simulations/securecomm2018
+export PATH="${PATH}:${HOME}/sumo/sumo-0.30.0/bin"
+export SUMO_HOME="${HOME}/sumo/sumo-0.30.0"
 if ! ./validate.sh;
 then
   echo 'validation script in your project failed, please look at the JSON output and remove it aftwards'
@@ -37,6 +40,7 @@ else
   rm e1_end_output.xml
   rm e1_link_output.xml
   rm .cmdenv-log
+  rmdir 1 2 4 8 16
 fi
 
 cd ~
