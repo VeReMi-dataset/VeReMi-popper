@@ -8,11 +8,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 from gini import gini
 
+import argparse
 
-inDir = "with_gt"
-graphDir = "weight-graphs"
+parser = argparse.ArgumentParser(description='Take result files with ground truth, compute "weight" in FP/FN rates for each vehicle, plot cumulatively for each sim -- represents intuition for Gini Coefficient.')
+parser.add_argument('--source', required=True, help='output of appendGT.py')
+parser.add_argument('--destination', required=True, help='folder in which graphs will be stored')
 
-detectorNames = ["eART", "eSAW"]
+args = parser.parse_args()
+
+inDir = args.source
+graphDir = args.destination
+
+if not inDir or not graphDir:
+    sys.exit(1)
+
+detectorNames = ["eART", "eSAW", "eMDM", "eDMV"]
 
 # TODO uniqueness necessary?
 markerList = itertools.cycle(('.', '+', 'o', '*', 'v', '^', '<', '.', '+'))

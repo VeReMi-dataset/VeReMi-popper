@@ -7,9 +7,19 @@ import matplotlib.pyplot as plt
 import numpy
 from lib.gini import gini
 
+import argparse
 
-inDir = "with_gt"
-graphDir = "gini-graphs"
+parser = argparse.ArgumentParser(description='Take result files with ground truth, computes gini coefficient for FPR and FNR, plot for each sim, as well as aggregate.')
+parser.add_argument('--source', required=True, help='output of appendGT.py')
+parser.add_argument('--destination', required=True, help='folder in which graphs will be stored')
+
+args = parser.parse_args()
+
+inDir = args.source
+graphDir = args.destination
+
+if not inDir or not graphDir:
+    sys.exit(1)
 
 detectorNames = ["eART", "eSAW", "eMDM", "eDMV"]
 # note: one agg color per detector..

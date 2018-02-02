@@ -7,8 +7,20 @@ import itertools
 import matplotlib.pyplot as plt
 import numpy
 
-inDir = "with_gt"
-graphDir = "graphs"
+import argparse
+
+parser = argparse.ArgumentParser(description='Take result files with ground truth, compute precision and recall, plot for each sim and aggregated.')
+parser.add_argument('--source', required=True, help='output of appendGT.py')
+parser.add_argument('--destination', required=True, help='folder in which graphs will be stored')
+
+args = parser.parse_args()
+
+inDir = args.source
+graphDir = args.destination
+
+if not inDir or not graphDir:
+    sys.exit(1)
+
 
 detectorNames = ["eART", "eSAW", "eMDM", "eDMV"]
 # note: one agg color per detector..
