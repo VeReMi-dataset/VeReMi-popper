@@ -29,7 +29,7 @@ markerList = itertools.cycle(('.', '+', 'o', '*', 'v', '^', '<', '.', '+'))
 colorList = itertools.cycle(('b', 'g', 'r', 'c', 'm', 'y', 'k', 'b', 'g'))
 
 # parameter that is being studied (useful for detectors with >1 parameter)
-thresholdName = "TH"
+thresholdNames = ["TH", "TH_DISTANCE"]
 
 simulationList = [f for f in os.listdir(inDir) if os.path.isfile(os.path.join(inDir, f)) and f.endswith('.json')]
 
@@ -50,10 +50,10 @@ def map_to_result(obj):
     
             for par in pars:
                 (key, value) = par
-                if key == thresholdName:
+                if key in thresholdNames:
                     parameter_value = value
 
-            if not thresholdName:
+            if not parameter_value:
                 # this detector does not have the specified parameter, skip it
                 continue
             res_array = None
