@@ -6,12 +6,12 @@ OVERALL=true
 #remove intermediate files? -- by default, no; set to true to enable
 REMOVE=false
 
-DOWNLOAD_FOLDER="./download1"
-INPUT_FOLDER="./input1"
-GT_FOLDER="./with_gt1"
-PR_GRAPHS="./graphs1"
-WEIGHT_GRAPHS="./weight-graphs1"
-GINI_GRAPHS="./gini-graphs1"
+DOWNLOAD_FOLDER="./download"
+INPUT_FOLDER="./input"
+GT_FOLDER="./with_gt"
+PR_GRAPHS="./graphs"
+WEIGHT_GRAPHS="./weight-graphs"
+GINI_GRAPHS="./gini-graphs"
 
 if [ "${OVERALL}" = true ]
 then
