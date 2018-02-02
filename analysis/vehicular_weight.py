@@ -73,18 +73,20 @@ def map_to_result(obj):
 
 def accumulate(acc, item):
     result = {}
-    for key in acc:
+    for key in set(acc.keys()).union(set(item.keys())):
         result[key]={}
-        for thld in acc[key]:
-            if key in item:
+        if key in acc and key in item:
+            for thld in acc[key]:
                 result[key][thld] = (acc[key][thld][0] + item[key][thld][0],
                                      acc[key][thld][1] + item[key][thld][1],
                                      acc[key][thld][2] + item[key][thld][2],
                                      acc[key][thld][3] + item[key][thld][3])
-            else:
-                #make sure acc[key][thld] is always correctly initialized
-                if thld not in result[key]:
-                    result[key][thld] = [0, 0, 0, 0]
+        elif key in acc:
+            for thld in acc[key]:
+                result[key][thld] = (acc[key][thld][0] + 0, acc[key][thld][1] + 0, acc[key][thld][2] + 0, acc[key][thld][3] + 0) 
+        elif key in item:
+            for thld in item[key]:
+                result[key][thld] = (0 + item[key][thld][0], 0 + item[key][thld][1], 0 + item[key][thld][2], 0 + item[key][thld][3])
     return result
 
 def precision_and_recall(data):
@@ -191,6 +193,8 @@ for sim in simulationList:
             attackerSenderData = []
 
             for sender in simAccumulateSender:
+                if detector not in simAccumulateSender[sender]:
+                    continue #skip keyerrors
                 senderData = simAccumulateSender[sender][detector][threshold]
                 (FP, FN, TP, TN) = senderData
                 total = FP + FN + TP + TN

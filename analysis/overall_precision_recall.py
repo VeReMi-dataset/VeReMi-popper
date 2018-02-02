@@ -41,6 +41,7 @@ plotData = []
 def mapToResult(obj):
     results = obj['results']
     mapResult = {}
+
     for item in results:
         (name, pars, res) = item
     
@@ -74,18 +75,20 @@ def mapToResult(obj):
 
 def accumulate(acc, item):
     result = {}
-    for key in acc:
+    for key in set(acc.keys()).union(set(item.keys())):
         result[key]={}
-        for thld in acc[key]:
-            if key in item:
+        if key in acc and key in item:
+            for thld in acc[key]:
                 result[key][thld] = (acc[key][thld][0] + item[key][thld][0],
                                      acc[key][thld][1] + item[key][thld][1],
                                      acc[key][thld][2] + item[key][thld][2],
                                      acc[key][thld][3] + item[key][thld][3])
-            else:
-                #make sure acc[key][thld] is always correctly initialized
-                if thld not in result[key]:
-                    result[key][thld] = [0, 0, 0, 0]
+        elif key in acc:
+            for thld in acc[key]:
+                result[key][thld] = (acc[key][thld][0] + 0, acc[key][thld][1] + 0, acc[key][thld][2] + 0, acc[key][thld][3] + 0) 
+        elif key in item:
+            for thld in item[key]:
+                result[key][thld] = (0 + item[key][thld][0], 0 + item[key][thld][1], 0 + item[key][thld][2], 0 + item[key][thld][3])
     return result
 
 def precisionAndRecall(data):
@@ -94,7 +97,7 @@ def precisionAndRecall(data):
     relevant = TP + FN
 
     if positive is 0:
-        print("Warning, 0 positives -- did your detector fail?")
+        print("Warning, 0 positives -- did your detector fail, or did you accept all messages?")
         precision = 0
     else:
         precision = TP/positive
@@ -161,7 +164,8 @@ for sim in simulationList:
     #reduces to {NAME -> {thld -> (FP,FN,TP,TN)}}
     for name in simAccumulate:
         for thld in simAccumulate[name]:
-            simAccumulate[name][thld] = precisionAndRecall(simAccumulate[name][thld])
+            (p, r) = precisionAndRecall(simAccumulate[name][thld])
+            simAccumulate[name][thld] = (p, r)
     
     for detector in detectorNames:
         print('creating graph for', sim, 'with detector', detector)
