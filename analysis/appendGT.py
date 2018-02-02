@@ -29,6 +29,7 @@ for simName in simulationList:
         'runNumber': None,
         'runID': None,
         'vehicleCount': 0,
+        'density': 0,
     }
 
     print("starting processing of", simName)
@@ -43,23 +44,28 @@ for simName in simulationList:
     attackerFraction = None
     runNumber = None
     vehicleCount = 0
+    density = 0
 
     scaFileName = [f for f in os.listdir(os.path.join(inDir, simName)) if f.endswith('.sca')]
     if scaFileName:
         scaFileName = scaFileName[0]
-        # pattern: AttackerTypeX-NUM-#RUNID.sca
+        # pattern: AttackerTypeX-NUM,start=Y-#RUNID.sca
         simSpec = scaFileName.split('-')
         singleAttacker = False
         attackerType = simSpec[0][12:]
         if len(simSpec) == 4:
             singleAttacker = True
+            (aF, dense) = simSpec[2].split(',')
 
-            attackerFraction = -1 * float(simSpec[2].split(',')[0])
-            # TODO parse the amount of vehicles from the file?
+            attackerFraction = -1 * float(aF)
+            density = int(dense.split('=')[1])
 
             runNumber = simSpec[3][1:-4]
         else:
-            attackerFraction = float(simSpec[1].split(',')[0])
+            (aF, dense) = simSpec[1].split(',')
+
+            attackerFraction = float(aF)
+            density = int(dense.split('=')[1])
 
             runNumber = simSpec[2][1:-4]
 
@@ -83,6 +89,7 @@ for simName in simulationList:
     simSpecObject['runNumber'] = runNumber
     simSpecObject['runID'] = simName
     simSpecObject['vehicleCount'] = vehicleCount
+    simSpecObject['density'] = density
 
     # parse vehicleIDs from file names assuming results-XXX.json as structure (default)
     vehicleList = [int(f[8:-5]) for f in os.listdir(os.path.join(inDir, simName)) if
