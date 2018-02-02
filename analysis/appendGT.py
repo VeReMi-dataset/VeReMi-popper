@@ -42,12 +42,13 @@ for simName in simulationList:
         if len(simSpec) == 4:
             singleAttacker = True
 
-            attackerFraction = -1 * float(simSpec[2])
+            attackerFraction = -1 * float(simSpec[2].split(',')[0])
             # TODO parse the amount of vehicles from the file?
 
             runNumber = simSpec[3][1:-4]
         else:
-            attackerFraction = float(simSpec[1])
+            attackerFraction = float(simSpec[1].split(',')[0])
+
             runNumber = simSpec[2][1:-4]
 
         with open(os.path.join(inDir, simName, scaFileName), 'r') as scaFile:
@@ -55,6 +56,8 @@ for simName in simulationList:
                 if not line.startswith('scalar'):
                     pass
                 else:
+                    if line.startswith('scalar _runattrs'):
+                        continue
                     vehicle = int(line.split('[')[1].split(']')[0])
                     if vehicleCount < vehicle:
                         vehicleCount = vehicle
@@ -99,7 +102,7 @@ for simName in simulationList:
 
                 newResults = []
                 for item in inObj["results"]:
-                    if item.startswith("Identity::"):
+                    if item.startswith("ID::"):
                         continue
                     (detectorName, params) = item[:-1].split('{')
                     paramKVs = []
