@@ -149,6 +149,9 @@ for sim in simulationList:
 
             obj = json.loads(line)
 
+            if 'attackertype' in obj:
+                print('duplicate header, please fix your files')
+
             mapRes = mapToResult(obj)
 
             simResultSet.append(mapRes)

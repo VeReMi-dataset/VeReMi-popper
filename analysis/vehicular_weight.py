@@ -142,6 +142,9 @@ for sim in simulationList:
 
             obj = json.loads(line)
 
+            if 'attackertype' in obj:
+                print('duplicate header, please fix your files')
+
             if not int(obj['senderID']) in simResultPerSender:
                 simResultPerSender[int(obj['senderID'])] = []
 
