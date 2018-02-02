@@ -3,9 +3,21 @@
 import json
 
 import os
+import sys
 
-inDir = "input"
-outDir = "with_gt"
+import argparse
+
+parser = argparse.ArgumentParser(description='Combine result files and ground truth files into one big file.')
+parser.add_argument('--source', required=True, help='source folder with output of ./extract.sh')
+parser.add_argument('--destination', required=True, help='destination folder where ground truth files will be stored')
+
+args = parser.parse_args()
+
+inDir = args.source
+outDir = args.destination
+
+if not inDir or not outDir:
+    sys.exit(1)
 
 simulationList = [f for f in os.listdir(inDir) if os.path.isdir(os.path.join(inDir, f))]
 print("list of simulation results:", simulationList)
