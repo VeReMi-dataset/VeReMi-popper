@@ -6,7 +6,7 @@ from functools import reduce
 import itertools
 import matplotlib.pyplot as plt
 import numpy as np
-from gini import gini
+from lib.gini import gini
 
 import argparse
 
@@ -71,20 +71,21 @@ def map_to_result(obj):
     # end for -- result item
     return map_result
 
-
 def accumulate(acc, item):
-    # this assumes that every detector and every threshold occurs for every message
-    # TODO insert (0,0,0,0) for missing stuff..?)
     result = {}
     for key in acc:
-        result[key] = {}
+        result[key]={}
         for thld in acc[key]:
-            result[key][thld] = (acc[key][thld][0] + item[key][thld][0],
-                                 acc[key][thld][1] + item[key][thld][1],
-                                 acc[key][thld][2] + item[key][thld][2],
-                                 acc[key][thld][3] + item[key][thld][3])
+            if key in item:
+                result[key][thld] = (acc[key][thld][0] + item[key][thld][0],
+                                     acc[key][thld][1] + item[key][thld][1],
+                                     acc[key][thld][2] + item[key][thld][2],
+                                     acc[key][thld][3] + item[key][thld][3])
+            else:
+                #make sure acc[key][thld] is always correctly initialized
+                if thld not in result[key]:
+                    result[key][thld] = [0, 0, 0, 0]
     return result
-
 
 def precision_and_recall(data):
     (FP, FN, TP, TN) = data
@@ -105,10 +106,12 @@ def precision_and_recall(data):
 thresholds = {}
 
 for sim in simulationList:
-    tmp = sim.split("_")
-    attackerType = tmp[0]
-    attackerFraction = tmp[1]
-    runNumber = tmp[2]
+    attackerType = None
+    attackerFraction = None
+    runNumber = None
+    runID = None
+    vehicleCount = None
+    simDescription = None
 
     print("working on", sim)
 
@@ -117,9 +120,26 @@ for sim in simulationList:
     simResultPerReceiver = {}
 
     with open(inFileName, 'r') as inFile:
+
+        first = True
         
         # map
         for line in inFile:
+            if first:
+                # header
+
+                obj = json.loads(line)
+
+                attackerType = obj['attackerType']
+                attackerFraction = obj['attackerFraction']
+                runNumber = obj['runNumber']
+                runID = obj['runID']
+                vehicleCount = obj['vehicleCount']
+                simDescription = obj
+
+                first = False
+                continue
+
             obj = json.loads(line)
 
             if not int(obj['senderID']) in simResultPerSender:

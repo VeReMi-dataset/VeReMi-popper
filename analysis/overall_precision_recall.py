@@ -73,24 +73,37 @@ def mapToResult(obj):
     return mapResult
 
 def accumulate(acc, item):
-    #this assumes that every detector and every threshold occurs for every message
-    #TODO insert (0,0,0,0) for missing stuff..?)
     result = {}
     for key in acc:
         result[key]={}
         for thld in acc[key]:
-            result[key][thld] = (acc[key][thld][0] + item[key][thld][0],
-                                 acc[key][thld][1] + item[key][thld][1],
-                                 acc[key][thld][2] + item[key][thld][2],
-                                 acc[key][thld][3] + item[key][thld][3])
+            if key in item:
+                result[key][thld] = (acc[key][thld][0] + item[key][thld][0],
+                                     acc[key][thld][1] + item[key][thld][1],
+                                     acc[key][thld][2] + item[key][thld][2],
+                                     acc[key][thld][3] + item[key][thld][3])
+            else:
+                #make sure acc[key][thld] is always correctly initialized
+                if thld not in result[key]:
+                    result[key][thld] = [0, 0, 0, 0]
     return result
 
 def precisionAndRecall(data):
     (FP, FN, TP, TN) = data
     positive = FP + TP
     relevant = TP + FN
-    precision = TP/positive
-    recall = TP/relevant
+
+    if positive is 0:
+        print("Warning, 0 positives -- did your detector fail?")
+        precision = 0
+    else:
+        precision = TP/positive
+
+    if relevant is 0:
+        print("Warning, 0 relevant -- do you have no attacker?")
+        recall = 1
+    else:
+        recall = TP/relevant
 
     if precision < 0.0 or precision > 1.0:
         print("Warning, bad precision")

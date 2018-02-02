@@ -9,7 +9,12 @@ for x in `ls "$1"`; do
   if [ ${x: -4} == ".tgz" ]; then
     RUN_ID=`basename "$x" .tgz`
 
-    tar --file "download/${x}" --wildcards --no-anchored --extract results/ --strip-components=7 --one-top-level="$2"/"$RUN_ID" 2>/dev/null
+    tar --file "$1/${x}" --wildcards --no-anchored --extract results/ --strip-components=7 --one-top-level="$2"/"$RUN_ID" 2>/dev/null
+
+    if [ -f "$2/${RUN_ID}/results/GroundTruthJSONlog.json" ]; then
+      mv "$2/${RUN_ID}/results/GroundTruthJSONlog.json" "$2/${RUN_ID}/GroundTruthJSONlog.json"
+    fi
+
 
     if [ "$?" -eq 0 ]; then
       #success: in the output folder, a set of results was stored, including log files, GT, and simulation description.
