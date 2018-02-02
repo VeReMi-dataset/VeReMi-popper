@@ -9,14 +9,15 @@ for x in `ls "$1"`; do
   if [ ${x: -4} == ".tgz" ]; then
     RUN_ID=`basename "$x" .tgz`
 
-    tar --file "$1/${x}" --wildcards --no-anchored --extract results/ --strip-components=7 --one-top-level="$2"/"$RUN_ID" 2>/dev/null
-
-    if [ -f "$2/${RUN_ID}/results/GroundTruthJSONlog.json" ]; then
-      mv "$2/${RUN_ID}/results/GroundTruthJSONlog.json" "$2/${RUN_ID}/GroundTruthJSONlog.json"
-    fi
-
+    OLD=`pwd`
+    echo "`pwd`"
+    tar --file "$1/${x}" --wildcards --no-anchored --extract results/ --strip-components=7 --one-top-level="$2/$RUN_ID" #2>/dev/null
 
     if [ "$?" -eq 0 ]; then
+      if [ -f "$2/${RUN_ID}/results/GroundTruthJSONlog.json" ]; then
+        mv "$2/${RUN_ID}/results/GroundTruthJSONlog.json" "$2/${RUN_ID}/GroundTruthJSONlog.json"
+      fi
+
       #success: in the output folder, a set of results was stored, including log files, GT, and simulation description.
       echo "$x successfully extracted"
       cd "$2/$RUN_ID"
@@ -24,7 +25,7 @@ for x in `ls "$1"`; do
         sed -i 's/de.uulm.vs.autodetect.posverif.//g;s/, SIGMA2=27380.0//g;s/, MAX_UNCERTAINTY=1.0//g;s/SIGMA2=29020.0, //g;s/, SIGMA2=117.0//g;s/THRESHOLD/TH/g;s/DistanceMovedVerifier/eDMV/g;s/Identity::/ID::/g' $item
       done
 
-      cd ../..
+      cd $OLD
 
     else
       #failure

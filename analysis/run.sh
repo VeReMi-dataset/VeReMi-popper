@@ -37,7 +37,26 @@ then
   python3 sim_gini.py --source ${GT_FOLDER} --destination ${GINI_GRAPHS}
 
 else
-  echo "subfolders are not yet supported.."
+  for SUBGROUP_NAME in `ls ${DOWNLOAD_FOLDER}`; do
+    mkdir -p ${INPUT_FOLDER}/${SUBGROUP_NAME} ${GT_FOLDER}/${SUBGROUP_NAME} ${PR_GRAPHS}/${SUBGROUP_NAME} ${WEIGHT_GRAPHS}/${SUBGROUP_NAME} ${GINI_GRAPHS}/${SUBGROUP_NAME}
+
+    echo "extracting..."
+    ./extract.sh ${DOWNLOAD_FOLDER}/${SUBGROUP_NAME} ${INPUT_FOLDER}/${SUBGROUP_NAME}
+
+    echo "appending..."
+    python3 appendGT.py --source ${INPUT_FOLDER}/${SUBGROUP_NAME} --destination ${GT_FOLDER}/${SUBGROUP_NAME}
+
+    if [ "${REMOVE}" = true ]
+    then
+      echo "removing input folders.."
+      rm -r ${INPUT_FOLDER}
+    fi
+
+    echo "graphs..."
+    python3 overall_precision_recall.py --source ${GT_FOLDER}/${SUBGROUP_NAME} --destination ${PR_GRAPHS}/${SUBGROUP_NAME}
+    python3 vehicular_weight.py --source ${GT_FOLDER}/${SUBGROUP_NAME} --destination ${WEIGHT_GRAPHS}/${SUBGROUP_NAME}
+    python3 sim_gini.py --source ${GT_FOLDER}/${SUBGROUP_NAME} --destination ${GINI_GRAPHS}/${SUBGROUP_NAME}
+  done
 fi
 
 
