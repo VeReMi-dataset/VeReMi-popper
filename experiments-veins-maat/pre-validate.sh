@@ -40,7 +40,7 @@ else
   rm e1_end_output.xml
   rm e1_link_output.xml
   rm .cmdenv-log
-  rmdir 1 2 4 8 16
+  rmdir 1 2 4 8 16 32 33 64
 fi
 
 cd ~
