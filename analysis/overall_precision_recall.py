@@ -6,31 +6,35 @@ from functools import reduce
 import itertools
 import matplotlib.pyplot as plt
 import numpy
+import sys
 
 import argparse
 
 parser = argparse.ArgumentParser(description='Take result files with ground truth, compute precision and recall, plot for each sim and aggregated.')
 parser.add_argument('--source', required=True, help='output of appendGT.py')
 parser.add_argument('--destination', required=True, help='folder in which graphs will be stored')
+parser.add_argument('--det', action='append', help='Use this argument to specify detector(s) to be analyzed')
+parser.add_argument('--th', action='append', help='Use this argument to specify threshold of the detector(s) to be analyzed')
 
 args = parser.parse_args()
 
 inDir = args.source
 graphDir = args.destination
+detectorNames = args.det
+thresholdNames= args.th
 
-if not inDir or not graphDir:
+print(detectorNames)
+print(thresholdNames)
+
+if not inDir or not graphDir or not detectorNames or not thresholdNames:
+    parser.print_help()
     sys.exit(1)
 
-
-detectorNames = ["eART", "eSAW", "eMDM", "eDMV"]
 # note: one agg color per detector..
-aggregateColors = itertools.cycle(('b', 'g')) # , 'r', 'c', 'm', 'y', 'k')
+aggregateColors = itertools.cycle(('b', 'g', 'r', 'c')) # , 'm', 'y', 'k')
 
 markerList = itertools.cycle(('.', '+', 'o', '*', 'v', '^', '<'))
 colorList  = itertools.cycle(('b', 'g', 'r', 'c', 'm', 'y', 'k'))
-
-#parameters that are being studied (should be at most 1 for any detector)
-thresholdNames = ["TH", "TH_DISTANCE"]
 
 simulationList = [f for f in os.listdir(inDir) if os.path.isfile(os.path.join(inDir, f)) and f.endswith('.json')]
 

@@ -7,29 +7,30 @@ import itertools
 import matplotlib.pyplot as plt
 import numpy as np
 from lib.gini import gini
+import sys
 
 import argparse
 
 parser = argparse.ArgumentParser(description='Take result files with ground truth, compute "weight" in FP/FN rates for each vehicle, plot cumulatively for each sim -- represents intuition for Gini Coefficient.')
 parser.add_argument('--source', required=True, help='output of appendGT.py')
 parser.add_argument('--destination', required=True, help='folder in which graphs will be stored')
+parser.add_argument('--det', action='append', help='Use this argument to specify detector(s) to be analyzed')
+parser.add_argument('--th', action='append', help='Use this argument to specify threshold of the detector(s) to be analyzed')
 
 args = parser.parse_args()
 
 inDir = args.source
 graphDir = args.destination
+detectorNames = args.det
+thresholdNames= args.th
 
-if not inDir or not graphDir:
+if not inDir or not graphDir or not detectorNames or not thresholdNames:
+    parser.print_help()
     sys.exit(1)
-
-detectorNames = ["eART", "eSAW", "eMDM", "eDMV"]
 
 # TODO uniqueness necessary?
 markerList = itertools.cycle(('.', '+', 'o', '*', 'v', '^', '<', '.', '+'))
 colorList = itertools.cycle(('b', 'g', 'r', 'c', 'm', 'y', 'k', 'b', 'g'))
-
-# parameter that is being studied (useful for detectors with >1 parameter)
-thresholdNames = ["TH", "TH_DISTANCE"]
 
 simulationList = [f for f in os.listdir(inDir) if os.path.isfile(os.path.join(inDir, f)) and f.endswith('.json')]
 

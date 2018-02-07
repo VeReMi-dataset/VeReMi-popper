@@ -12,6 +12,14 @@ GT_FOLDER="./with_gt"
 PR_GRAPHS="./graphs"
 WEIGHT_GRAPHS="./weight-graphs"
 GINI_GRAPHS="./gini-graphs"
+DETECTORS="--det eART --det eSAW --det eSSC --det eDMV"
+THRESHOLDS="--th TH --th BAD_DEV"
+
+if [ -d ${INPUT_FOLDER} ] 
+then
+  echo "input folder already exists, please (re)move it first"
+  exit 1
+fi
 
 if [ "${OVERALL}" = true ]
 then
@@ -32,9 +40,9 @@ then
   fi
 
   echo "graphs..."
-  python3 overall_precision_recall.py --source ${GT_FOLDER} --destination ${PR_GRAPHS}
-  python3 vehicular_weight.py --source ${GT_FOLDER} --destination ${WEIGHT_GRAPHS}
-  python3 sim_gini.py --source ${GT_FOLDER} --destination ${GINI_GRAPHS}
+  python3 overall_precision_recall.py --source ${GT_FOLDER} --destination ${PR_GRAPHS} ${DETECTORS} ${THRESHOLDS}
+  python3 vehicular_weight.py --source ${GT_FOLDER} --destination ${WEIGHT_GRAPHS} ${DETECTORS} ${THRESHOLDS}
+  python3 sim_gini.py --source ${GT_FOLDER} --destination ${GINI_GRAPHS} ${DETECTORS} ${THRESHOLDS}
 
 else
   for SUBGROUP_NAME in `ls ${DOWNLOAD_FOLDER}`; do
@@ -53,9 +61,9 @@ else
     fi
 
     echo "graphs..."
-    python3 overall_precision_recall.py --source ${GT_FOLDER}/${SUBGROUP_NAME} --destination ${PR_GRAPHS}/${SUBGROUP_NAME}
-    python3 vehicular_weight.py --source ${GT_FOLDER}/${SUBGROUP_NAME} --destination ${WEIGHT_GRAPHS}/${SUBGROUP_NAME}
-    python3 sim_gini.py --source ${GT_FOLDER}/${SUBGROUP_NAME} --destination ${GINI_GRAPHS}/${SUBGROUP_NAME}
+    python3 overall_precision_recall.py --source ${GT_FOLDER}/${SUBGROUP_NAME} --destination ${PR_GRAPHS}/${SUBGROUP_NAME} ${DETECTORS} ${THRESHOLDS}
+    python3 vehicular_weight.py --source ${GT_FOLDER}/${SUBGROUP_NAME} --destination ${WEIGHT_GRAPHS}/${SUBGROUP_NAME} ${DETECTORS} ${THRESHOLDS}
+    python3 sim_gini.py --source ${GT_FOLDER}/${SUBGROUP_NAME} --destination ${GINI_GRAPHS}/${SUBGROUP_NAME} ${DETECTORS} ${THRESHOLDS}
   done
 fi
 
