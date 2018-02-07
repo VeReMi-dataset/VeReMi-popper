@@ -49,20 +49,22 @@ for simName in simulationList:
     scaFileName = [f for f in os.listdir(os.path.join(inDir, simName)) if f.endswith('.sca')]
     if scaFileName:
         scaFileName = scaFileName[0]
-        # pattern: AttackerTypeX-NUM,start=Y-#RUNID.sca
+        # pattern: AttackerType8-start=3,0.1-#0.sca --> 3 is density indicator, 0.1 is attacker fraction, 0 is run number
         simSpec = scaFileName.split('-')
         singleAttacker = False
         attackerType = simSpec[0][12:]
+
         if len(simSpec) == 4:
+            print('Warning, looks like single attacker setup, code for this is less stable')
             singleAttacker = True
-            (aF, dense) = simSpec[2].split(',')
+            (dense, aF) = simSpec[2].split(',')
 
             attackerFraction = -1 * float(aF)
             density = int(dense.split('=')[1])
 
             runNumber = simSpec[3][1:-4]
         else:
-            (aF, dense) = simSpec[1].split(',')
+            (dense, aF) = simSpec[1].split(',')
 
             attackerFraction = float(aF)
             density = int(dense.split('=')[1])

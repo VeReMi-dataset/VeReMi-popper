@@ -22,7 +22,7 @@ for x in `ls "$1"`; do
       echo "$x successfully extracted"
       cd "$2/$RUN_ID"
       for item in `ls results-*.json`; do
-        sed -i 's/de.uulm.vs.autodetect.posverif.//g;s/, SIGMA2=27380.0//g;s/, MAX_UNCERTAINTY=1.0//g;s/SIGMA2=29020.0, //g;s/, SIGMA2=117.0//g;s/THRESHOLD/TH/g;s/DistanceMovedVerifier/eDMV/g;s/Identity::/ID::/g' $item
+        sed -i 's/de.uulm.vs.autodetect.posverif.//g;s/Identity::/ID::/g' $item
       done
 
       cd $OLD
