@@ -15,9 +15,9 @@ GINI_GRAPHS="./gini-graphs"
 DETECTORS="--det eART --det eSAW --det eSSC --det eDMV"
 THRESHOLDS="--th TH --th BAD_DEV"
 
-if [ -d ${INPUT_FOLDER} ] 
+if [ -d ${INPUT_FOLDER} ] && [ "$1" != "-f" ]
 then
-  echo "input folder already exists, please (re)move it first"
+  echo "input folder already exists, please (re)move it first, or use -f as first argument to ignore this message"
   exit 1
 fi
 
