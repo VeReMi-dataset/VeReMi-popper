@@ -5,6 +5,12 @@ import os
 from functools import reduce
 import itertools
 import matplotlib.pyplot as plt
+
+from matplotlib import rcParams
+
+rcParams.update({'font.size': 18})
+#rcParams.update({'figure.autolayout': False})
+
 import numpy
 import sys
 
@@ -15,6 +21,7 @@ parser.add_argument('--source', required=True, help='output of appendGT.py')
 parser.add_argument('--destination', required=True, help='folder in which graphs will be stored')
 parser.add_argument('--det', action='append', help='Use this argument to specify detector(s) to be analyzed')
 parser.add_argument('--th', action='append', help='Use this argument to specify threshold of the detector(s) to be analyzed')
+parser.add_argument('--plotSimGraphs', help='Use this switch to force a graph file for each simulation')
 
 args = parser.parse_args()
 
@@ -22,6 +29,7 @@ inDir = args.source
 graphDir = args.destination
 detectorNames = args.det
 thresholdNames= args.th
+plotSimGraphs = args.plotSimGraphs
 
 print(detectorNames)
 print(thresholdNames)
@@ -171,35 +179,37 @@ for sim in simulationList:
             (p, r) = precisionAndRecall(simAccumulate[name][thld])
             simAccumulate[name][thld] = (p, r)
     
-    for detector in detectorNames:
-        print('creating graph for', sim, 'with detector', detector)
-        (fig, axes) = plt.subplots(figsize=(10,8))
-        axes.set_xlabel("precision")
-        axes.set_ylabel("recall")
-        axes.set_xlim([0,1])
-        axes.set_ylim([0,1])
-    
-        for threshold in sorted(list(simAccumulate[detector])):
-            marker = next(markerList)
-            color = next(colorList)
-            axes.scatter(simAccumulate[detector][threshold][0], simAccumulate[detector][threshold][1], marker=marker, color=color, label=threshold)
-            plotData.append([attackerType, attackerFraction, runNumber, vehicleCount, detector, threshold, simAccumulate[detector][threshold][0], simAccumulate[detector][threshold][1]])
+    if plotSimGraphs:
+        for detector in detectorNames:
+            print('creating graph for', sim, 'with detector', detector)
+            (fig, axes) = plt.subplots(figsize=(10,8))
+            axes.set_xlabel("recall")
+            axes.set_ylabel("precision")
+            axes.set_xlim([0,1])
+            axes.set_ylim([0,1])
+        
+            for threshold in sorted(list(simAccumulate[detector])):
+                marker = next(markerList)
+                color = next(colorList)
+                axes.scatter(simAccumulate[detector][threshold][1], simAccumulate[detector][threshold][0], marker=marker, color=color, label=threshold)
+                plotData.append([attackerType, attackerFraction, runNumber, vehicleCount, detector, threshold, simAccumulate[detector][threshold][0], simAccumulate[detector][threshold][1]])
 
 
-        # Shrink current axis by 20%
-        box = axes.get_position()
-        axes.set_position([box.x0, box.y0, box.width * 0.8, box.height * 0.9])
+            # Shrink current axis by 20%
+            box = axes.get_position()
+            axes.set_position([box.x0, box.y0, box.width * 0.8, box.height * 0.9])
 
-        plt.legend(loc='center left', bbox_to_anchor=(1,0.5))
-        plt.title(sim + " - " + detector)
-    
-        plt.savefig(os.path.join(graphDir, sim+ "-" + detector + ".png"), bbox_inces="tight", format='png')
-        plt.close()
+            plt.legend(loc='center left', bbox_to_anchor=(1,0.5))
+            plt.title(sim + " - " + detector)
+        
+            plt.savefig(os.path.join(graphDir, sim+ "-" + detector + ".png"), bbox_inces="tight", format='png')
+            plt.close()
+    else:
+        for detector in detectorNames:
+            for threshold in sorted(list(simAccumulate[detector])):
+                plotData.append([attackerType, attackerFraction, runNumber, vehicleCount, detector, threshold, simAccumulate[detector][threshold][0], simAccumulate[detector][threshold][1]])
 
 # plotData contains a list of 8-arrays (attackerType, attackerFraction, runNumber, vehicleCount, detector, threshold, precision, recall)
-
-# TODO here, write some code that to generate specific views on this data.
-plotObjects = []
 
 # plot key, (attackerType, attackerFraction) -> lines: key, (name) -> data: key, (thld) -> [precisionArray, recallArray]
 newData = {}
@@ -219,27 +229,27 @@ for (attackerType, attackerFraction, runNumber, vehicleCount, detector, threshol
 
 for (attackerType, attackerFraction) in newData:
 
-    (fig, axes) = plt.subplots(figsize=(10,8))
-    axes.set_xlabel("precision")
-    axes.set_ylabel("recall")
+    (fig, axes) = plt.subplots(figsize=(10,5))
+    axes.set_xlabel("recall")
+    axes.set_ylabel("precision")
     axes.set_xlim([0,1])
     axes.set_ylim([0,1])
 
-    title = "Precision-recall with respect to attacker type " + str(attackerType) + " (approx. " + str(attackerFraction) + " attackers)"
+    title = "attacker type " + str(attackerType) + " (" + str(attackerFraction*100) + "% attackers)"
     for name in newData[(attackerType, attackerFraction)]:
         label = name
         XY = []
         for threshold in newData[(attackerType, attackerFraction)][name]:
             (precisionArray, recallArray) = newData[(attackerType, attackerFraction)][name][threshold]
             #note: stdev here shows the variation in the *population of samples*, i.e., is a biased estimator of the standard deviation of the underlying normal distribution, if this is normally distributed
-            XY.append([numpy.mean(precisionArray), numpy.mean(recallArray), numpy.std(precisionArray), numpy.std(recallArray)])
+            XY.append([numpy.mean(recallArray), numpy.mean(precisionArray), numpy.std(recallArray), numpy.std(precisionArray)])
         (x, y, xerr, yerr) = zip(*XY)
         color = next(aggregateColors)
         axes.errorbar(x, y, xerr=xerr, yerr=yerr, fmt='--o', label=name, color=color)
         minthld = min(newData[(attackerType, attackerFraction)][name].keys())
         maxthld = max(newData[(attackerType, attackerFraction)][name].keys())
-        axes.annotate(minthld, xy=(x[0],y[0]), xytext=(x[0]-0.1, y[0]-0.1), arrowprops=dict(facecolor=color, shrink=0.001))
-        axes.annotate(maxthld, xy=(x[-1],y[-1]), xytext=(x[-1]-0.1, y[-1]-0.1), arrowprops=dict(facecolor=color, shrink=0.001))
+        axes.annotate(minthld, xy=(x[0],y[0]), xytext=(x[0]-0.1, y[0]-0.15), arrowprops=dict(facecolor=color, shrink=0.1))
+        axes.annotate(maxthld, xy=(x[-1],y[-1]), xytext=(x[-1]-0.1, y[-1]-0.15), arrowprops=dict(facecolor=color, shrink=0.1))
 
     # Shrink current axis by 20%
     box = axes.get_position()
@@ -248,5 +258,5 @@ for (attackerType, attackerFraction) in newData:
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     plt.title(title)
 
-    plt.savefig(os.path.join(graphDir, "attacker-" + str(attackerType) + "-frac-" + str(attackerFraction) + ".png"), bbox_inces="tight", format='png')
+    plt.savefig(os.path.join(graphDir, "pr-attacker-" + str(attackerType) + "-frac-" + str(attackerFraction) + ".svg"), bbox_inces="tight", format='svg')
     plt.close()

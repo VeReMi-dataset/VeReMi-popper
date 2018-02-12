@@ -41,7 +41,7 @@ then
 
   echo "graphs..."
   python3 overall_precision_recall.py --source ${GT_FOLDER} --destination ${PR_GRAPHS} ${DETECTORS} ${THRESHOLDS}
-  python3 vehicular_weight.py --source ${GT_FOLDER} --destination ${WEIGHT_GRAPHS} ${DETECTORS} ${THRESHOLDS}
+  #python3 vehicular_weight.py --source ${GT_FOLDER} --destination ${WEIGHT_GRAPHS} ${DETECTORS} ${THRESHOLDS}
   python3 sim_gini.py --source ${GT_FOLDER} --destination ${GINI_GRAPHS} ${DETECTORS} ${THRESHOLDS}
 
 else
@@ -62,7 +62,7 @@ else
 
     echo "graphs..."
     python3 overall_precision_recall.py --source ${GT_FOLDER}/${SUBGROUP_NAME} --destination ${PR_GRAPHS}/${SUBGROUP_NAME} ${DETECTORS} ${THRESHOLDS}
-    python3 vehicular_weight.py --source ${GT_FOLDER}/${SUBGROUP_NAME} --destination ${WEIGHT_GRAPHS}/${SUBGROUP_NAME} ${DETECTORS} ${THRESHOLDS}
+    #python3 vehicular_weight.py --source ${GT_FOLDER}/${SUBGROUP_NAME} --destination ${WEIGHT_GRAPHS}/${SUBGROUP_NAME} ${DETECTORS} ${THRESHOLDS}
     python3 sim_gini.py --source ${GT_FOLDER}/${SUBGROUP_NAME} --destination ${GINI_GRAPHS}/${SUBGROUP_NAME} ${DETECTORS} ${THRESHOLDS}
   done
 fi
