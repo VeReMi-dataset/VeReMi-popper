@@ -234,7 +234,7 @@ for (attackerType, attackerFraction) in newData:
             XY.append([numpy.mean(giniFNArray), numpy.mean(giniFPArray), numpy.std(giniFNArray), numpy.std(giniFPArray)])
         (x, y, xerr, yerr) = zip(*XY)
         color = next(aggregateColors)
-        axes.errorbar(x, y, xerr=xerr, yerr=yerr, fmt='o', label=name, color=color)
+        axes.errorbar(x, y, xerr=xerr, yerr=yerr, fmt='--o', label=name, color=color)
         minthld = min(newData[(attackerType, attackerFraction)][name].keys())
         maxthld = max(newData[(attackerType, attackerFraction)][name].keys())
         axes.annotate(minthld, xy=(x[0],y[0]), xytext=(x[0]-0.1, y[0]-0.15), arrowprops=dict(facecolor=color, shrink=0.1))
