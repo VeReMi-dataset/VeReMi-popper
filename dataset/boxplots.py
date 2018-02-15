@@ -13,6 +13,9 @@ med_csv = sys.argv[2]
 low_csv = sys.argv[3]
 speed = sys.argv[4]
 
+# usage:  python boxplot.py high.csv med.csv low.csv reception
+# or:     python boxplot.py high-speeds.csv med-speeds.csv low-speeds.csv speed
+
 if __name__ == "__main__":
   colors = [["#7D9AAA","#A9A280","#56AA1C","#A32638","#26247C","#BD6005"],["#b1c2ca","#c9c6b9","#96ca74","#c77a84","#7a98b0","#d59c69"]]
   font = {'fontname':'Latin Modern Roman'}
