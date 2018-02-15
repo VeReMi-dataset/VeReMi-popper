@@ -127,7 +127,7 @@ for sim in simulationList:
     # {detector -> {threshold -> {sender -> [(FP,FN,TP,TN)]}}}
     sim_gini = {}
 
-    for det_name in sorted(list(simResultPerDetector)):
+    for det_name in list(simResultPerDetector):
         for threshold in sorted(list(simResultPerDetector[det_name])):
             data_dict = simResultPerDetector[det_name][threshold]
             FPR_array = []
