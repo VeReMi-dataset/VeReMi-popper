@@ -33,7 +33,7 @@ if __name__ == "__main__":
     else:
         labels = ["high","medium","low"]
         x_range = [-50,5000]
-        x_axis_label = "reception events"
+        x_axis_label = "amount of reception events"
         filename_hist = "histogram-reception-events.png"
         filename_box = "boxplot-reception-events.png"
         bins_resolution = [2.5,2000]
@@ -66,7 +66,7 @@ if __name__ == "__main__":
       plt.hist(data[j],bins,alpha = 0.5, color=colors[0][j+2], label = labels[j])
 
       
-    plt.ylabel("amount",**font)
+    plt.ylabel("frequency",**font)
     plt.xlabel(x_axis_label,**font)
 
     plt.legend()
