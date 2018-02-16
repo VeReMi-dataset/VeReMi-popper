@@ -32,11 +32,11 @@ if __name__ == "__main__":
         bins_resolution = [2.5,1200]
     else:
         labels = ["high","medium","low"]
-        x_range = [-50,5000]
+        x_range = [-50,5500]
         x_axis_label = "amount of reception events"
         filename_hist = "histogram-reception-events.png"
         filename_box = "boxplot-reception-events.png"
-        bins_resolution = [2.5,2000]
+        bins_resolution = [2.5,2200]
 
     csvs.append(high)
     csvs.append(med)
