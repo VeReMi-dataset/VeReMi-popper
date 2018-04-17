@@ -10,7 +10,6 @@ for x in `ls "$1"`; do
     RUN_ID=`basename "$x" .tgz`
 
     OLD=`pwd`
-    echo "`pwd`"
     tar --file "$1/${x}" --wildcards --no-anchored --extract results/ --strip-components=7 --one-top-level="$2/$RUN_ID" #2>/dev/null
 
     if [ "$?" -eq 0 ]; then

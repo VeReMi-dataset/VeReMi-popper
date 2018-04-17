@@ -248,8 +248,8 @@ for (attackerType, attackerFraction) in newData:
         axes.errorbar(x, y, xerr=xerr, yerr=yerr, fmt='--o', label=name, color=color)
         minthld = min(newData[(attackerType, attackerFraction)][name].keys())
         maxthld = max(newData[(attackerType, attackerFraction)][name].keys())
-        axes.annotate(minthld, xy=(x[0],y[0]), xytext=(x[0]-0.1, y[0]-0.15), arrowprops=dict(facecolor=color, shrink=0.1))
-        axes.annotate(maxthld, xy=(x[-1],y[-1]), xytext=(x[-1]-0.1, y[-1]-0.15), arrowprops=dict(facecolor=color, shrink=0.1))
+        axes.annotate(minthld, xy=(x[0],y[0]), xytext=(x[0]-0.1, y[0]-0.10), arrowprops=dict(facecolor=color, shrink=0.1))
+        axes.annotate(maxthld, xy=(x[-1],y[-1]), xytext=(x[-1]-0.1, y[-1]-0.10), arrowprops=dict(facecolor=color, shrink=0.1))
 
     # Shrink current axis by 20%
     box = axes.get_position()

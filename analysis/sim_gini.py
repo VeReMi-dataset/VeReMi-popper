@@ -231,14 +231,14 @@ for (attackerType, attackerFraction) in newData:
         for threshold in newData[(attackerType, attackerFraction)][name]:
             (giniFPArray, giniFNArray) = newData[(attackerType, attackerFraction)][name][threshold]
             #note: stdev here shows the variation in the *population of samples*, i.e., is a biased estimator of the standard deviation of the underlying normal distribution, if this is normally distributed
-            XY.append([numpy.mean(giniFNArray), numpy.mean(giniFPArray), numpy.std(giniFNArray), numpy.std(giniFPArray)])
+            XY.append([numpy.mean(giniFPArray), numpy.mean(giniFNArray), numpy.std(giniFPArray), numpy.std(giniFNArray)])
         (x, y, xerr, yerr) = zip(*XY)
         color = next(aggregateColors)
         axes.errorbar(x, y, xerr=xerr, yerr=yerr, fmt='--o', label=name, color=color)
         minthld = min(newData[(attackerType, attackerFraction)][name].keys())
         maxthld = max(newData[(attackerType, attackerFraction)][name].keys())
-        axes.annotate(minthld, xy=(x[0],y[0]), xytext=(x[0]-0.1, y[0]-0.15), arrowprops=dict(facecolor=color, shrink=0.1))
-        axes.annotate(maxthld, xy=(x[-1],y[-1]), xytext=(x[-1]-0.1, y[-1]-0.15), arrowprops=dict(facecolor=color, shrink=0.1))
+        axes.annotate(minthld, xy=(x[0],y[0]), xytext=(x[0]-0.1, y[0]-0.10), arrowprops=dict(facecolor=color, shrink=0.1))
+        axes.annotate(maxthld, xy=(x[-1],y[-1]), xytext=(x[-1]-0.1, y[-1]-0.10), arrowprops=dict(facecolor=color, shrink=0.1))
 
     # Shrink current axis by 20%
     box = axes.get_position()

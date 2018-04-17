@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #by default, do everything -- set this to false to assume your folders are sub-divided
-OVERALL=true
+OVERALL=false
 
 #remove intermediate files? -- by default, no; set to true to enable
 REMOVE=false
